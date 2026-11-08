@@ -1,1 +1,496 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=guia-credenciais/"><title>Raio-X da Operação</title></head><body><a href="guia-credenciais/">Guia de credenciais para o n8n</a></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raio-X da Operação</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* Mesmo formato dos wizards do MeuOS: cartão central, passos numerados no topo, rótulos em caixa alta, Voltar e Continuar no rodapé. */
+:root{color-scheme:light;--navy:#1a2b4a;--or:#e8631c;--or2:#c9521a;--ok:#1e9e5a;--line:#e3e6ec;--bg:#f3f4f7;--tx:#1d2330;--mut:#6b7280;--soft:#f7f8fa;--blue:#e8f1fb;--blue2:#2a6cb5;--okbg:#e6f4ea;--okfg:#1e7a3c;--orx:#a8460f}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 Inter,Arial,sans-serif}
+button{font:inherit;cursor:pointer}
+.top{max-width:980px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px)) 0}
+.top h1{font-size:22px;margin:0;color:var(--tx)}.top p{margin:2px 0 0;color:var(--mut);font-size:14px}
+.card{max-width:980px;margin:16px auto 48px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px #0000000f;display:flex;flex-direction:column;min-height:calc(100vh - 140px)}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.head b{font-size:16px}.head .acts{display:flex;gap:8px}
+.quiet{border:1px solid var(--line);background:#fff;color:var(--tx);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:600}.quiet:hover{background:var(--soft)}
+.route{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:12px 20px 0}
+.route li{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border:1px solid transparent;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--mut);cursor:pointer;background:none;font-family:inherit}
+.route li i{font-style:normal;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#e5e7eb;color:#fff}
+.route li.done{color:var(--tx)}.route li.done i{background:var(--ok)}
+.route li[aria-current]{border-color:var(--or);color:var(--tx);background:#fff}.route li[aria-current] i{background:var(--or)}
+.body{padding:18px 20px 8px;flex:1}
+.intro{color:var(--mut);margin:0 0 14px;font-size:14px}
+.count{display:none}
+h2{font-size:17px;line-height:1.3;margin:0 0 2px;color:var(--tx)}
+h2 .n{display:none}
+.hint{color:var(--mut);margin:0 0 16px;font-size:13.5px}
+.field{display:grid;gap:5px;margin-bottom:14px}
+.field label,.glabel{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tx);margin:0}.glabel{margin:6px 0 6px}
+input[type=text],input[type=number],textarea,select{width:100%;font:inherit;color:var(--tx);background:#fff;border:1px solid #d4d8e0;border-radius:9px;padding:11px 13px}
+input::placeholder,textarea::placeholder{color:#9aa1ad}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--or);border-color:var(--or)}
+button:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sub{font-size:12.5px;color:var(--mut);margin:0 0 6px}
+.opt{padding:9px 14px;border:1px solid #d4d8e0;border-radius:9px;background:#fff;font-size:14px;font-weight:600;color:var(--tx);display:inline-flex;gap:8px;align-items:center;text-align:left}
+.opt:hover{border-color:var(--or)}
+.opt[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.opt .n{font-size:11px;font-weight:700;background:#fff;color:var(--navy);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.err{color:var(--orx);font-weight:600;font-size:14px;min-height:1.4em;margin:2px 20px 0}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 20px 16px;border-top:1px solid var(--line)}
+.nav .pos{font-size:12.5px;color:var(--mut);margin:0 auto}
+.btn{border-radius:20px;font-weight:700;font-size:14px;padding:9px 18px;background:var(--or);border:1px solid var(--or);color:#fff}.btn:hover{background:var(--or2)}
+.btn.ghost{background:#fff;border-color:var(--line);color:var(--tx);font-weight:600}.btn.ghost:hover{background:var(--soft)}
+.link{background:none;border:0;padding:0;color:var(--blue2);font-size:13px;font-weight:600;text-decoration:underline}
+.review{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:0 0 14px}
+.review div{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) auto;gap:10px;padding:9px 12px;border-top:1px solid var(--line);font-size:14px}
+.review div:first-child{border-top:0}
+.review dt{font-weight:700;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;align-self:center}.review dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:480px){.review div{grid-template-columns:minmax(0,1fr) auto}.review dd{grid-column:1/-1;grid-row:2}}
+.box{border-radius:9px;padding:11px 14px;margin:10px 0;font-size:14px}
+.box b{display:block;font-size:11.5px;letter-spacing:.06em}
+.box.v{background:var(--blue);border-left:4px solid var(--blue2)}.box.v b{color:var(--blue2)}
+.box.g{background:var(--okbg);border-left:4px solid var(--okfg)}.box.g b{color:var(--okfg)}
+ol.st{list-style:none;margin:14px 0 6px;padding:0;counter-reset:s}
+ol.st>li{counter-increment:s;position:relative;padding:2px 0 12px 38px}
+ol.st>li:before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+details.tech{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:12px 0 10px}
+details.tech summary{font-weight:600;cursor:pointer}
+pre#prompt{font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--soft);border-radius:7px;padding:14px;max-height:360px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0 4px}
+.status{font-size:14px;color:var(--okfg);font-weight:600;min-height:1.4em;margin:8px 0 0}
+.copybar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0}
+@media(max-width:640px){.card{margin:10px 8px 32px;min-height:0}.head,.body,.nav{padding-left:14px;padding-right:14px}.route{padding-left:14px;padding-right:14px}.err{margin-left:14px}}
+</style>
+</head>
+<body>
+
+<div class="top"><h1>Raio-X da Operação</h1><p>Assistente para montar o painel de gestão do seu escritório</p></div>
+<div class="card">
+  <div class="head"><b>Raio-X da Operação <span id="hn" style="font-weight:500;color:var(--mut)"></span></b>
+    <div class="acts"><button class="quiet" id="demo" type="button">Ver um exemplo fictício</button><button class="quiet" id="reset" type="button">Recomeçar</button></div></div>
+  <ol class="route" id="route" aria-label="Passos"></ol>
+  <div class="body">
+    <p class="intro" id="intro">Cada escritório é diferente, então são algumas perguntas rápidas, só do que você sabe de cabeça. No fim, você recebe as instruções prontas para a sua IA montar, no seu n8n, um painel ligado aos dados reais dos sistemas do escritório.</p>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div id="step"></div>
+  </div>
+  <p class="err" id="err" role="alert"></p>
+  <div class="nav" id="nav">
+    <button class="btn ghost" id="back" type="button">← Voltar</button>
+    <span class="pos" id="pos"></span>
+    <button class="btn" id="next" type="button">Continuar →</button>
+  </div>
+</div>
+
+<script>
+const KEY='raio-x-operacao-v9';
+// Fontes: T = sistema de tarefas (ou cadastro na plataforma), C = contábil/fiscal, F = financeiro do escritório, S = Integra Contador, A = qualquer fonte.
+// Catálogo baseado na pesquisa de mercado de 07/11/2026 (Brasil e internacional): entregas no prazo, retrabalho, produtividade e carga, rentabilidade por cliente, honorários e pendências do cliente.
+const KPIS=[
+ {g:'Entregas e prazos',k:'atrasado',l:'Tarefas atrasadas agora',f:'T',d:'tarefas sem entrega depois do prazo, separadas em "parada no escritório" e "esperando o cliente"'},
+ {g:'Entregas e prazos',k:'vence',l:'O que vence nos próximos 7 dias',f:'T',d:'tarefas com prazo nos próximos 7 dias, por responsável'},
+ {g:'Entregas e prazos',k:'multa',l:'Prazo legal próximo, sem entrega confirmada',f:'T',d:'obrigações com prazo legal vencido ou em até 5 dias, sem comprovante de entrega; só chame de "risco de multa" quando a regra da obrigação confirmar a multa'},
+ {g:'Entregas e prazos',k:'noprazo',l:'Quanto foi entregue no prazo no mês',f:'T',d:'entregues no prazo ÷ total com prazo no mês, mostrando a quantidade junto do percentual; prazo interno e prazo legal separados quando o sistema tiver os dois'},
+ {g:'Entregas e prazos',k:'tempo',l:'Tempo médio para concluir',f:'T',d:'dias entre o recebimento e a conclusão, por tipo de tarefa; só se o sistema registrar as duas datas'},
+ {g:'Equipe',k:'produz',l:'Entregas por pessoa',f:'T',d:'quantas tarefas cada pessoa concluiu, quantas no prazo e o percentual, sempre com a quantidade ao lado'},
+ {g:'Equipe',k:'carga',l:'Carga de trabalho por pessoa',f:'T',d:'tarefas abertas, vencendo e atrasadas por pessoa, para ver quem está sobrecarregado e quem tem folga'},
+ {g:'Equipe',k:'gargalo',l:'Em qual setor as coisas travam',f:'T',d:'atrasadas e paradas por setor, com o tempo parado'},
+ {g:'Equipe',k:'retrabalho',l:'Serviço refeito',f:'T',d:'tarefas reabertas ou refeitas ÷ concluídas, por setor; só se o sistema registrar reabertura'},
+ {g:'Clientes',k:'pendencias',l:'Pendências do cliente',f:'T',d:'documentos e respostas em aberto por cliente, há quantos dias e quantas vezes foram pedidos'},
+ {g:'Clientes',k:'trabalho',l:'Clientes que mais dão trabalho',f:'T',d:'tarefas, reaberturas e pedidos extras por cliente nos últimos 90 dias'},
+ {g:'Clientes',k:'rentab',l:'O que cada cliente paga × o trabalho que dá',f:'TF',d:'honorário do mês ÷ tarefas concluídas (ou horas, se o sistema registrar) por cliente; nunca para decidir sozinho quem sai, só para apoiar a conversa'},
+ {g:'Dinheiro do escritório',k:'receber',l:'Honorários a receber e em atraso',f:'F',d:'títulos em aberto por faixa de atraso: a vencer, até 30, 31 a 60, mais de 60 dias'},
+ {g:'Dinheiro do escritório',k:'inadimp',l:'Quem está inadimplente',f:'F',d:'clientes com título vencido, valor e há quantos dias'},
+ {g:'Dinheiro do escritório',k:'receita',l:'Receita do mês por cliente e por serviço',f:'F',d:'o que foi faturado no mês, por cliente e por tipo de serviço, comparado com o mês anterior'},
+ {g:'Dinheiro do escritório',k:'extras',l:'Serviços extras feitos e não cobrados',f:'TF',d:'tarefas fora da rotina mensal sem título correspondente no financeiro; só se o sistema de tarefas marcar o que é extra'},
+ {g:'Contábil',dep:'Contábil',k:'balancete',l:'Empresas com balancete em dia',f:'CT',d:'até qual mês cada empresa está fechada, contra o prazo do escritório'},
+ {g:'Contábil',dep:'Contábil',k:'fechamento',l:'Fechamento conferido × só pronto',f:'CT',d:'empresas com balancete pronto mas sem conferência ou aprovação registrada, só se a fonte guardar essa etapa'},
+ {g:'Contábil',dep:'Contábil',k:'semmov',l:'Empresas sem movimento registrado no mês',f:'C',d:'empresas ativas sem lançamento registrado no mês; é ponto de conferência, não falha: pode ser empresa parada de verdade ou lançamento que ainda não entrou'},
+ {g:'Contábil',dep:'Contábil',k:'docs',l:'Documentos esperando contabilização',f:'C',d:'documentos recebidos e ainda não lançados, por empresa, só se o sistema contábil expuser isso'},
+ {g:'Fiscal',dep:'Fiscal',k:'transmitidas',l:'Obrigações fiscais transmitidas com comprovante',f:'T',d:'obrigações do mês marcadas como feitas e as que têm comprovante de transmissão guardado, por empresa e por obrigação'},
+ {g:'Fiscal',dep:'Fiscal',k:'escrituracao',l:'Notas fiscais recebidas e não escrituradas',f:'C',d:'notas de entrada e saída do mês ainda não escrituradas, por empresa, só se o sistema fiscal expuser isso'},
+ {g:'Fiscal',dep:'Fiscal',k:'apuracao',l:'Apurações e guias do mês',f:'T',d:'quais empresas já têm a apuração do mês feita e a guia emitida, e quais faltam, pelo regime de cada uma'},
+ {g:'Fiscal',dep:'Fiscal',k:'receita_federal',l:'Situação dos clientes na Receita',f:'S',d:'pendências e mensagens por empresa pelo Integra Contador, só leitura'},
+ {g:'Pessoal',dep:'Pessoal',k:'folha',l:'Folha fechada no prazo',f:'T',d:'empresas com folha do mês fechada, atrasada ou esperando informação do cliente'},
+ {g:'Pessoal',dep:'Pessoal',k:'esocial',l:'eSocial transmitido e processado',f:'T',d:'por empresa, eventos do mês transmitidos e com processamento confirmado, contra os prazos oficiais; transmitido sem retorno não conta como concluído'},
+ {g:'Pessoal',dep:'Pessoal',k:'fgts',l:'FGTS Digital: guia emitida × recolhimento confirmado',f:'T',d:'por empresa, guia do mês emitida e recolhimento confirmado são duas coisas; guia gerada não prova pagamento'},
+ {g:'Pessoal',dep:'Pessoal',k:'movimentos',l:'Admissões, férias e rescisões pendentes',f:'T',d:'movimentos pedidos pelo cliente e ainda não concluídos, com há quantos dias, só se o sistema registrar'},
+ {g:'Qualidade dos dados',k:'saude',l:'O que está mal preenchido nos sistemas',f:'A',d:'cadastro incompleto em qualquer fonte, com nota de preenchimento de 0 a 100'},
+ {g:'Qualidade dos dados',k:'reforma',l:'Clientes mapeados para a Reforma Tributária',f:'A',d:'quantas empresas têm registro de avaliação para a Reforma; só se houver esse registro em algum sistema ou no cadastro'}
+];
+const GRUPOS={
+ contabil:{t:'Sistema contábil e fiscal (escrituração)',principais:['Domínio','Alterdata'],lista:['Domínio','Alterdata','OneFlow','Questor','Contmatic','SCI','Fortes','Tron','Outro','Nenhum']},
+ financeiro:{t:'Financeiro do escritório',lista:['Omie','Conta Azul','Bling','Olist Tiny','Nibo Gestão','vhsys','Granatum','Sankhya','Outro','Nenhum']},
+ tarefas:{t:'Controle de tarefas e obrigações',lista:['Acessórias','Nibo Obrigações','Gestta','Tareffa','Onvio Processos','Outro','Nenhum']}
+};
+const DOCS={'Acessórias':'https://api.acessorias.com/documentation','Nibo Obrigações':'https://nibo.readme.io','Nibo Gestão':'https://nibo.readme.io','Conta Azul':'https://developers.contaazul.com','Bling':'https://developer.bling.com.br','Olist Tiny':'https://api-docs.erp.olist.com','vhsys':'https://developers.vhsys.com.br','Granatum':'https://static.granatum.com.br/financeiro/api','Sankhya':'https://developer.sankhya.com.br','Contmatic':'https://developer.contmatic.com.br','Omie':'https://api.omie.com.br/docs','Domínio':'https://developerportal.thomsonreuters.com/onvio-br-accounting-api','Alterdata':'https://eplugin.pack.alterdata.com.br','Questor':'https://docs.questor.com.br/pt-br/Produtos/Integracoes/SYN-Privado/nWeb/Primeiros-Passos','SCI':'https://portal-dev.sci.com.br','Fortes':'https://conecta.fortestecnologia.com.br/swagger','Integra Contador (Serpro)':'https://apicenter.estaleiro.serpro.gov.br/documentacao/api-integra-contador/pt/','OneFlow':'https://api.swaggerhub.com/apis/oneflowoficial/integracoes/2.0.0 (autenticação em https://ajuda.omie.com.br/pt-BR/articles/9113296)'};
+const CAMINHOS={
+ 'Acessórias':{st:'completo',auth:'token Bearer; cerca de 100 chamadas por minuto; 50 registros por página em empresas e entregas, 20 nas demais; erro de negócio vem com HTTP 200 e a chave Erro',le:['GET /companies/ListAll: empresas com CNPJ, regime e situação','GET /departments/ListAll e GET /users/ListAll: setores e responsáveis','GET /deliveries/ListAll com DtInitial e DtFinal: entregas com prazo, atraso, data de entrega, situação, responsável e setor','GET /requests/ListAll: pendências pedidas ao cliente, com situação','GET /processes/ListAll: processos'],falta:'prazo interno separado do legal e comprovante de transmissão'},
+ 'Nibo Obrigações':{st:'parcial',auth:'cabeçalhos X-API-Key e X-User-Id; filtros OData com $top até 100 e $skip',le:['GET /accountingfirms/{id}/customers: empresas com CNPJ, regime (1 Real, 2 Presumido, 4 Simples, 5 MEI) e data de inativação','GET /departments e GET /responsibilities: setores e responsáveis','GET /tasks: tarefas com situação (2 a fazer, 3 concluída, 8 cancelada), data prevista e data de conclusão','GET /process: processos com prazo e conclusão'],falta:'prazo legal, comprovante, reabertura e pendências ao cliente'},
+ 'Gestta':{st:'nao'},'Tareffa':{st:'nao'},'Onvio Processos':{st:'nao'},
+ 'Domínio':{st:'parcial',auth:'OAuth2 em auth.thomsonreuters.com; o escritório pede as credenciais à equipe Onvio BR',le:['GET /dominio/integration/v2/client/info?pageIndex=N: lista de clientes com CNPJ, nome, inscrições','GET /dominio/status/v2/integration/info: situação da integração','GET /dominio/invoice/v2/batches/{id}: situação dos documentos enviados'],falta:'regime, situação da empresa, balancete, lançamentos, documentos não lançados, guias, folha e eSocial; para esses itens a saída provável é o sistema de tarefas, o cadastro na plataforma ou exportação do próprio Domínio, e você me diz qual'},
+ 'Alterdata':{st:'parcial',auth:'token Bearer do ePlugin; respostas JSON:API com page[offset] e page[limit] até 25; exige o pacote eContador Master',le:['GET /api/v1/empresas: empresas com CNPJ, nome e ativa','GET /api/v1/integracao/historico-tarefas?dataInicial&dataFinal: tarefas com prazo interno (prazoEntrega), prazo legal, responsável, situação (1 a fazer, 2 concluída, 5 atrasada, 6 risco de multa, 7 enviado), data de conclusão, empresa e setor','GET /api/v1/integracao/documentos: documentos publicados ao cliente, com filtros de pago e vencimento','GET /api/v1/integracao/certidoes: certidões'],falta:'regime, data de inativação, balancete, mês fechado, notas e eSocial'},
+ 'OneFlow':{st:'completo',auth:'token JWT em três níveis (usuário, aplicativo do escritório, aplicativo da empresa); o token de usuário vence em 24 horas; base https://rest.oneflow.com.br/api',le:['GET /oneflow/escritorio/empresas/listar e /empresas/detalhes: empresas','GET /empresa/geral/onboarding: situação dos módulos fiscal, contábil, folha e eSocial','GET /empresa/contabil/balancete e GET /empresa/moduloprocessostatus: balancete por competência e situação do módulo na competência (o mais próximo de mês fechado)','GET /empresa/contabil/razao e /contabil/planocontas/contas: razão por conta e período','GET /empresa/fiscal/documentos/listar, /totais e /quantidade; GET /empresa/fiscal/apuracao/listar e /resumo: documentos fiscais e apurações','GET /empresa/obrigacoes/listar, /geral e /anexos: obrigações com anexos','GET /empresa/folha/statusfolha, /datas e /recibos/totais: situação da folha'],falta:'eSocial e FGTS transmitidos e documento recebido e não lançado; responsável por obrigação não vem na leitura'},
+ 'Questor':{st:'parcial',auth:'executor local nWeb (nWeb.exe, porta 8080, TokenApi) rodando no servidor do escritório; cada tela ou relatório é uma rotina a mapear',le:['GET /TnWebDMConsulta/Pegar?_AActionName=TnGemDCEmpresa: empresas; outras telas trocando o _AActionName, descobertas por /TnWebDMMenus/Pegar','/TnWebDMRelatorio/Executar: relatórios, inclusive balancete, em CSV ou PDF','/TnWebDMProcesso/ProcessoExecutar: apurações','POST /Integracao/Exportar: exportação por layout'],falta:'as rotinas de balancete, apuração e tarefas precisam ser mapeadas no Questor do escritório'},
+ 'SCI':{st:'parcial',auth:'Token de Parceiro e Token de Cliente trocados por JWT de 1 hora em POST api-auth.sci.com.br/api/v1/auth/credencial/login; leitura exige o módulo Report',le:['GET api-relatorio.sci.com.br/api/v1/empresa/: empresas','GET /publicados/busca com referenciaInicial, tipoDocumento=imposto e status=pendentes: guias com valor, vencimento e data de pagamento','GET api-integranet.sci.com.br/api/nfe/entrada e /saida (e nfce, cte, nfse) por empresa e período: documentos fiscais'],falta:'regime, situação, balancete, mês fechado, folha fechada e eSocial'},
+ 'Fortes':{st:'parcial',auth:'três tokens em POST /api/v2/login (empresa contábil, usuário, contexto); OData com $top até 30; é o Fortes Conecta, o portal',le:['GET /api/v2/EmpresaContabil/listarempresascliente e /listarEmpresasAtivas: empresas','GET /arquivoContabil, /itens/naovisualizados, /itens/vencidos, /itens/enviadoscontabil: documentos do portal','GET /ocorrenciasfolha, /admissao/{cnpj}, /ferias/{cnpj}, /rescisao/{cnpj}: solicitações de pessoal','GET /empresacliente/ConsultarCertidoes: certidões'],falta:'o Fortes Contábil e Fiscal não têm API pública: balancete, apuração e escrituração saem por exportação'},
+ 'Contmatic':{st:'nao'},'Tron':{st:'nao'},
+ 'Omie':{st:'completo',auth:'app_key e app_secret do aplicativo; 240 chamadas por minuto por método, 4 simultâneas; 10 erros seguidos bloqueiam por 30 minutos, então pare no segundo erro; 100 registros por página',le:['ListarClientes: clientes com CNPJ ou CPF e inativo','ListarContasReceber com filtros de data e apenas em aberto: vencimento, valor, situação e categoria','ListarMovimentos com cTpLancamento=BXCR e período de pagamento: recebimentos com valor pago, categoria e cliente','ListarCategorias: nomes das categorias'],falta:''},
+ 'Conta Azul':{st:'completo',auth:'OAuth2; 600 chamadas por minuto e 10 por segundo; 429 vem com Retry-After',le:['GET /v1/pessoas: clientes','GET /v1/financeiro/eventos-financeiros/contas-a-receber/buscar com data_vencimento_de e ate obrigatórios: títulos com situação EM_ABERTO, ATRASADO ou RECEBIDO; baixas pelo filtro data_pagamento','GET /v1/venda/busca e itens: vendas por cliente e serviço','GET /v1/categorias: categorias'],falta:''},
+ 'Bling':{st:'parcial',auth:'OAuth2; 3 chamadas por segundo e 120 mil por dia; filtro de data maior que 1 ano dá erro 400',le:['GET /contatos: clientes','GET /contas/receber com dataVencimentoInicial e Final: títulos a receber','GET /nfe: notas'],falta:'a referência oficial carrega por script e não pôde ser lida: confirme cada campo na documentação antes de usar'},
+ 'Olist Tiny':{st:'completo',auth:'OAuth2; limit 100 e offset; cabeçalhos X-RateLimit informam o limite do plano',le:['GET /contatos: clientes com CPF ou CNPJ e situação','GET /contas-receber com situação (aberto, pago, parcial, atrasadas) e período de vencimento; GET /contas-receber/{id}: data de liquidação, valor pago e categoria','GET /notas por período e cliente','GET /categorias-receita-despesa: categorias'],falta:''},
+ 'Nibo Gestão':{st:'completo',auth:'cabeçalho ApiToken; OData com $top até 500, $skip e $orderBy obrigatório; plano Premium',le:['GET /empresas/v1/customers: clientes','GET /schedules/credit: títulos com vencimento, valor, valor em aberto, pago, vencido, cliente e categoria','GET /receipts: recebimentos com data, valor, cliente e categorias'],falta:'limite de chamadas não publicado: comece devagar'},
+ 'vhsys':{st:'completo',auth:'cabeçalhos access-token, secret-access-token e User-Agent; limit até 250 e offset',le:['GET /v2/clientes: clientes com CNPJ e situação','GET /v2/contas-receber com filtros de vencimento, pagamento e liquidado: vencimento, valor, liquidado, data de pagamento e categoria','GET /v2/categorias-financeiras: categorias de receita e despesa'],falta:''},
+ 'Granatum':{st:'completo',auth:'access_token na consulta e User-Agent obrigatório; 100 chamadas por minuto; limit 50 (até 500) e start',le:['GET /v1/clientes: clientes com documento','GET /v1/lancamentos?tipo=R (a receber), RA (atrasados) e LR com data_inicio e data_fim (recebidos); conta_id obrigatório salvo com pessoa_id','GET /v1/categorias: categorias'],falta:''},
+ 'Sankhya':{st:'parcial',auth:'token da plataforma; paginação por page',le:['GET /v1/parceiros/clientes: clientes com CNPJ ou CPF','GET /v1/financeiros/receitas com statusFinanceiro (1 aberto, 2 baixado) e período de vencimento: títulos com data e valor da baixa e natureza'],falta:'faturamento por serviço e filtro por data de baixa não achados'},
+ 'Integra Contador (Serpro)':{st:'parcial',auth:'contrato com o Serpro e procuração eletrônica no e-CAC por empresa; os dados são da Receita, por CNPJ, e não trazem nada da gestão interna do escritório',le:['POST /Consultar com CAIXAPOSTAL MSGCONTRIBUINTE61: mensagens da caixa postal por empresa, 50 por página','SITFIS SOLICITARPROTOCOLO91 e RELATORIOSITFIS92: situação fiscal, em PDF','DCTFWEB CONSRECIBO32, PGDASD CONSULTIMADECREC14, DEFIS CONSULTIMADECREC143, MIT SITUACAOENC315: recibos e situação das declarações','REGIMEAPURACAO CONSULTAROPCAOREGIME103: regime de apuração','PROCURACOES OBTERPROCURACAO41: procurações ativas'],falta:''}
+};
+const BUSCA=`Roteiro de busca, para sistema sem caminho levantado e para os itens marcados acima como não achados. Não desista do sistema nem invente um caminho. Siga esta ordem e me mostre o resultado de cada passo antes do seguinte:
+1. Procure a documentação oficial do fornecedor: portal de desenvolvedor, central de ajuda e termos como API, integração, webhook, exportação agendada e token. Só use fonte oficial do fornecedor; não use sites que agregam documentação de vários sistemas.
+2. Veja se o fornecedor oferece MCP, nó comunitário do n8n ou integração pronta com algum sistema que o escritório já usa. Se sim, leia a documentação dela.
+3. Se não achar leitura pública, escreva para mim um pedido técnico curto para eu mandar ao fornecedor: existe API de leitura; como é a autenticação; como listar empresas, tarefas com prazo, responsável e situação, e títulos a receber; limites de uso; o que precisa ser contratado. Quem envia sou eu; você só redige.
+4. Enquanto a resposta não vem, proponha a alternativa: exportação periódica em CSV ou Excel feita por alguém do escritório, enviada a um formulário do n8n que grava nas mesmas tabelas; ou o cadastro na própria plataforma. Diga o que cada alternativa deixa de mostrar.
+5. Nunca entre no sistema com o login e a senha de uma pessoa para copiar telas, e nunca contorne os termos de uso do fornecedor.
+6. Registre no meu OS o que achou e classifique cada item do painel que depende desse sistema como funciona, funciona em parte ou não dá, com a evidência.`;
+const blank=()=>({nome:'',pessoas:'',clientes:'',deptos:[],deptoOutro:'',sis:{contabil:[],financeiro:[],tarefas:[]},sisOutro:{contabil:'',financeiro:'',tarefas:''},serpro:'',cred:{},manter:'',prioridades:[],analise:[],balancete:'',balanceteOutro:'',incomoda:'',acesso:'',freq:'',resumo:'',confere:'',pedidos:'',regras:''});
+let a=blank(), i=0, resetArm=false;
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.a){a=Object.assign(blank(),s.a);a.sis=Object.assign({},blank().sis,s.a.sis||{});for(const g in a.sis)if(!Array.isArray(a.sis[g]))a.sis[g]=a.sis[g]?[a.sis[g]]:[];a.sisOutro=Object.assign({},blank().sisOutro,s.a.sisOutro||{});a.cred=s.a.cred||{};i=s.i||0}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({a,i}))}catch(e){}};
+const $=id=>document.getElementById(id);
+const el=(t,p={},...k)=>{const e=document.createElement(t);for(const x in p){if(x==='on')e.addEventListener('click',p[x]);else if(x==='in')e.addEventListener('input',p[x]);else if(x in e&&x!=='list')e[x]=p[x];else e.setAttribute(x,p[x])}k.forEach(c=>e.append(c));return e};
+const deptos=()=>{const d=a.deptos.filter(x=>x!=='Outro');if(a.deptos.includes('Outro')&&a.deptoOutro.trim())d.push(a.deptoOutro.trim());return d};
+const nomesSis=g=>a.sis[g].filter(v=>v!=='Nenhum').map(v=>v==='Outro'?(a.sisOutro[g].trim()||'Outro'):v);
+const temSis=g=>nomesSis(g).length>0;
+const GNOME={tarefas:'tarefas e obrigações',contabil:'contábil e fiscal',financeiro:'financeiro do escritório'};
+// Fontes disponíveis: tarefas sem sistema vira cadastro na plataforma, então T existe sempre que o grupo foi respondido.
+const fontes=()=>{const f=new Set(['A']);if(a.sis.tarefas.length)f.add('T');if(temSis('contabil'))f.add('C');if(temSis('financeiro'))f.add('F');if(a.serpro==='Sim')f.add('S');return f};
+const disponivel=k=>{const f=fontes();if(k.dep&&!a.deptos.includes(k.dep))return false;return [...k.f].every(x=>x==='A'||f.has(x))||(k.f==='CT'&&(f.has('C')||f.has('T')))};
+const kpi=k=>KPIS.find(x=>x.k===k);
+const sistemas=()=>['tarefas','contabil','financeiro'].flatMap(g=>nomesSis(g).map(nome=>({g,nome,key:g+':'+nome,cred:a.cred[g+':'+nome]||''}))).concat(a.serpro==='Sim'?[{g:'serpro',nome:'Integra Contador (Serpro)',key:'serpro',cred:a.cred.serpro||''}]:[]);
+
+function opts(list,get,set,multi){
+  const box=el('div',{className:'opts'});
+  list.forEach(o=>{const on=multi?get().includes(o):get()===o;
+    box.append(el('button',{type:'button',className:'opt','aria-pressed':String(on),textContent:o,on(){
+      if(multi){const v=get();set(v.includes(o)?v.filter(x=>x!==o):[...v,o])}else set(o);
+      draw()}}))});
+  return box}
+function num(id,label,get,set,ph){
+  const f=el('div',{className:'field'},el('label',{htmlFor:id,textContent:label}));
+  const c=el('input',{id,value:get(),placeholder:ph||'',in(e){set(e.target.value.replace(/\D/g,''));save()}});c.type='number';c.min='1';c.step='1';c.setAttribute('inputmode','numeric');f.append(c);return f}
+function text(id,label,get,set,ph,area){
+  const f=el('div',{className:'field'},el('label',{htmlFor:id,textContent:label}));
+  const c=el(area?'textarea':'input',{id,value:get(),placeholder:ph||'',in(e){set(e.target.value);save()}});
+  if(!area)c.type='text';f.append(c);return f}
+
+const PRAZOS=`# Prazos oficiais já levantados
+Conferidos em 06/11/2026 na Agenda Tributária da Receita Federal e nas normas oficiais. Valem para obrigações federais e trabalhistas. Cada empresa só tem as obrigações que se aplicam a ela: o que vale depende do regime e da atividade.
+Agenda do mês: https://www.gov.br/receitafederal/pt-br/assuntos/agenda-tributaria
+
+Como usar:
+- O prazo que está no sistema é o da operação do escritório. Use a lista abaixo para conferir e para achar obrigação que falta.
+- Se o sistema e a lista divergirem, me mostre a diferença. Não escolha sozinho.
+- Antes de ligar dados reais, confira na Agenda do mês se algo mudou.
+- Em dia não útil, siga a coluna indicada: "prorroga" vai para o próximo dia útil e "antecipa" volta para o dia útil anterior. Feriado e ponto facultativo dependem da obrigação e do calendário que vale para ela: confira na fonte oficial antes de mover uma data.
+- Esta lista é referência inicial, não regra universal. Antes de gerar qualquer alerta, confirme a obrigação aplicável, a competência, o calendário e a fonte oficial. Obrigação que falta para uma empresa é hipótese até o escritório confirmar.
+
+MEI
+- DAS-MEI: dia 20 do mês seguinte. A regra de dia não útil precisa de conferência.
+- DASN-SIMEI: último dia de maio.
+
+Simples Nacional (ME e EPP)
+- PGDAS-D e DAS: dia 20 do mês seguinte, prorroga. Desde 01/01/2026, atraso no PGDAS-D tem multa de 2% ao mês, no mínimo R$ 50.
+- DEFIS: 31/03. A partir de 01/01/2027 a DEFIS é revogada e a informação passa para o PGDAS-D, entre janeiro e março.
+
+Lucro Presumido
+- PIS e Cofins: dia 25 do mês seguinte, antecipa.
+- IRPJ e CSLL trimestrais: último dia útil do mês seguinte ao trimestre, ou em 3 quotas nos 3 meses seguintes.
+- EFD-Contribuições: 10º dia útil do 2º mês seguinte.
+- ECD, para quem é obrigado: último dia útil de junho.
+- ECF: último dia útil de julho.
+
+Lucro Real
+- Tudo o que vale para o Presumido, com estas diferenças:
+- IRPJ e CSLL por estimativa: último dia útil do mês seguinte. Saldo anual: último dia útil de março.
+- IRPJ e CSLL trimestrais: último dia útil do mês seguinte ao trimestre, ou em 3 quotas.
+
+Quem tem funcionário, retenção ou obrigação previdenciária, em qualquer regime que se aplique
+- eSocial, folha: dia 15 do mês seguinte, prorroga. MEI e segurado especial: dia 7.
+- EFD-Reinf: dia 15 do mês seguinte, prorroga.
+- FGTS Digital: dia 20 do mês seguinte, antecipa. Só feriado nacional e bancário conta.
+- DARF de INSS: dia 20 do mês seguinte, antecipa.
+- IRRF, regra geral, e retenções de PIS, Cofins e CSLL: último dia útil do 2º decêndio do mês seguinte.
+- DCTFWeb: último dia útil do mês seguinte.
+- 13º salário: 1ª parcela entre fevereiro e novembro. 2ª parcela até 20/12. INSS e DCTFWeb do 13º até 20/12, antecipa.
+
+Só para algumas atividades
+- IPI: dia 25 do mês seguinte, antecipa. Cigarros: dia 10.
+- DIMOB, atividade imobiliária: último dia útil de fevereiro.
+- DMED, saúde: último dia útil de fevereiro.
+- Dirbi, para quem usa benefício fiscal: dia 20 do 2º mês seguinte. Regra de dia não útil precisa de conferência.
+
+Pessoa física
+- DIRPF: muda todo ano. Em 2026 foi de 23/03 a 29/05. Confira a instrução da Receita de cada ano.
+
+Não crie tarefa para o que acabou
+- DCTF: só períodos até 12/2024. Depois disso, tudo vai na DCTFWeb.
+- DIRF: extinta desde o ano-calendário 2025.
+- RAIS: cumprida pelo eSocial, sem data anual própria.
+
+Não está nesta lista
+- ICMS, ISS, GIA, SPED Fiscal e demais estaduais e municipais: cada estado e município define. Leia do sistema. Se não estiver lá, marque como a confirmar e não invente data.
+- Reforma tributária: a Agenda de novembro de 2026 não traz guia mensal de CBS ou IBS. As mudanças de 2027 não estão aqui: confirme antes de usar.
+
+Sem regra confirmada para dia não útil: DEFIS, DASN-SIMEI, Dirbi e parcelas do 13º. Use a data do sistema ou a da Agenda do mês; não calcule por conta própria.`;
+
+const STEPS=[
+ {id:'nome',label:'Escritório',t:'Como se chama o escritório?',h:'Ele aparece no título do seu painel.',
+  r:b=>b.append(text('f-nome','Nome do escritório',()=>a.nome,v=>a.nome=v,'Ex.: Contábil Horizonte')),
+  ok:()=>a.nome.trim()?'':'Informe o nome do escritório.',v:()=>a.nome},
+ {id:'porte',label:'Tamanho',t:'Qual o tamanho do escritório?',h:'Pode ser um número aproximado. Isso dimensiona o painel e o volume de dados.',
+  r:b=>{b.append(num('f-pes','Quantas pessoas trabalham no escritório, contando você?',()=>a.pessoas,v=>a.pessoas=v,'Ex.: 12'),
+   num('f-emp','Quantas empresas o escritório atende hoje?',()=>a.clientes,v=>a.clientes=v,'Ex.: 95'))},
+  ok:()=>{const p=parseInt(a.pessoas,10),c=parseInt(a.clientes,10);return !(p>0)?'Informe quantas pessoas, em número.':(!(c>0)?'Informe quantas empresas, em número.':'')},v:()=>`${a.pessoas} pessoas · ${a.clientes} empresas`},
+ {id:'deptos',label:'Setores',t:'Quais setores existem no escritório?',h:'Cada um ganha a sua parte no painel.',
+  r:b=>{b.append(opts(['Fiscal','Contábil','Pessoal','Societário','Financeiro/BPO','Atendimento','Outro'],()=>a.deptos,v=>a.deptos=v,true));
+   if(a.deptos.includes('Outro'))b.append(text('f-dout','Nome do outro setor',()=>a.deptoOutro,v=>a.deptoOutro=v))},
+  ok:()=>a.deptos.includes('Outro')&&!a.deptoOutro.trim()?'Informe o nome do outro setor.':(deptos().length?'':'Escolha ao menos um setor.'),v:()=>deptos().join(', ')},
+ {id:'sistemas',label:'Sistemas',t:'Quais sistemas o escritório usa?',h:'Marque todos os que fazem parte da operação, mesmo que seja mais de um no mesmo grupo. O painel vai puxar informação de todos os que você conseguir ligar. Se não usar, marque "Nenhum".',
+  r:b=>{Object.entries(GRUPOS).forEach(([g,x])=>{const setSis=v=>{const novo=v.filter(y=>!a.sis[g].includes(y))[0];a.sis[g]=novo==='Nenhum'?['Nenhum']:v.filter(y=>y!=='Nenhum');if(!a.sis[g].includes('Outro'))a.sisOutro[g]=''};
+    b.append(el('p',{className:'glabel',textContent:x.t}));
+    if(x.principais){b.append(el('p',{className:'sub',textContent:'Os mais usados'}),opts(x.principais,()=>a.sis[g],setSis,true),el('p',{className:'sub',textContent:'Também atendidos, se o escritório usar'}),opts(x.lista.filter(y=>!x.principais.includes(y)),()=>a.sis[g],setSis,true))}
+    else b.append(opts(x.lista,()=>a.sis[g],setSis,true));
+    if(a.sis[g].includes('Outro'))b.append(text('f-'+g,'Qual sistema? Se for mais de um, separe por vírgula',()=>a.sisOutro[g],v=>a.sisOutro[g]=v))});
+   b.append(el('p',{className:'glabel',textContent:'O escritório usa o Integra Contador, da Receita (Serpro)?'}),opts(['Sim','Não','Não sei'],()=>a.serpro,v=>a.serpro=v))},
+  ok:()=>{for(const g in GRUPOS){if(!a.sis[g].length)return 'Marque ao menos uma opção em cada grupo, ou "Nenhum".';if(a.sis[g].includes('Outro')&&!a.sisOutro[g].trim())return 'Informe o nome do sistema.'}return a.serpro?'':'Responda sobre o Integra Contador.'},
+  v:()=>['tarefas','contabil','financeiro'].map(g=>nomesSis(g).join(', ')||'Nenhum').join(' · ')+(a.serpro==='Sim'?' · Integra Contador':'')},
+ {id:'cred',label:'Acessos',t:'Como estão os acessos de cada sistema no n8n?',h:'Credencial é a chave que o n8n usa para entrar no sistema. Ela é criada em uma etapa à parte, antes deste passo.',
+  r:b=>{const s=sistemas();if(!s.length){b.append(el('p',{className:'hint',textContent:'Nenhum sistema para ligar. O painel vai usar o cadastro feito na própria plataforma.'}));return}
+   s.forEach(x=>b.append(el('p',{className:'glabel',textContent:x.nome}),opts(['Já está no n8n','Ainda não está no n8n','Não sei'],()=>a.cred[x.key]||'',v=>{a.cred=Object.assign({},a.cred,{[x.key]:v})})))},
+  ok:()=>sistemas().every(x=>x.cred)?'':'Responda para cada sistema.',v:()=>sistemas().map(x=>`${x.nome}: ${x.cred||'—'}`).join(' · ')||'Sem sistema'},
+ {id:'prioridades',label:'O que ver',t:'O que você quer ver no painel?',h:'Escolha até 7, na ordem de importância: elas aparecem primeiro no painel. As demais entram depois, organizadas por setor, conforme o dado existir. A lista muda conforme os sistemas e setores que você marcou.',
+  r:b=>{let n=0;const grupos=[...new Set(KPIS.map(k=>k.g))];const fora=[];
+   grupos.forEach(g=>{const its=KPIS.filter(k=>k.g===g&&disponivel(k));KPIS.filter(k=>k.g===g&&!disponivel(k)&&(!k.dep||a.deptos.includes(k.dep))).forEach(k=>fora.push(k));if(!its.length)return;
+    b.append(el('p',{className:'glabel',textContent:g}));const box=el('div',{className:'opts'});
+    its.forEach(k=>{const p=a.prioridades.indexOf(k.k);const btn=el('button',{type:'button',className:'opt','aria-pressed':String(p>=0),on(){
+      if(p<0&&a.prioridades.filter(q=>disponivel(kpi(q))).length>=7){$('err').textContent='Você já escolheu 7. Desmarque uma para trocar.';return}
+      a.prioridades=p>=0?a.prioridades.filter(x=>x!==k.k):[...a.prioridades,k.k];draw()}});
+     if(p>=0)btn.append(el('span',{className:'n',textContent:String(p+1)}));btn.append(k.l);box.append(btn)});b.append(box)});
+   if(fora.length)b.append(el('div',{className:'box v'},el('b',{textContent:'LIGANDO MAIS SISTEMAS VOCÊ TAMBÉM VERIA'}),fora.map(k=>k.l).join(' · ')));
+   b.append(text('f-ped','Quer ver algo que não está na lista? Escreva com suas palavras (opcional)',()=>a.pedidos,v=>a.pedidos=v,'Ex.: quantas empresas ainda não mandaram o extrato do mês',true))},
+  ok:()=>a.prioridades.filter(k=>disponivel(kpi(k))).length?'':'Escolha ao menos uma opção.',v:()=>a.prioridades.filter(k=>disponivel(kpi(k))).map(k=>kpi(k).l).join(' → ')+(a.pedidos.trim()?' · Pedido: '+a.pedidos.trim():'')},
+ {id:'analise',label:'Como olhar',t:'Como você quer olhar esses números?',h:'Pode marcar mais de uma opção.',
+  r:b=>{b.append(opts(['Por setor','Por pessoa','Por cliente','Por regime tributário','Por mês'],()=>a.analise,v=>a.analise=v,true));
+   if(fontes().has('C')||fontes().has('T')){b.append(el('p',{className:'glabel',textContent:'Até quando o balancete de um mês costuma ficar pronto?'}),opts(['Até o 15º dia útil do mês seguinte','Até o fim do mês seguinte','Não temos um prazo definido','Outro'],()=>a.balancete,v=>a.balancete=v));
+    if(a.balancete==='Outro')b.append(text('f-bout','Qual o prazo?',()=>a.balanceteOutro,v=>a.balanceteOutro=v,'Ex.: até o dia 20 do mês seguinte'))}
+   b.append(text('f-reg','Regras ou prazos internos do escritório que o painel precisa respeitar (opcional)',()=>a.regras,v=>a.regras=v,'Ex.: a folha fecha no dia 25; o fiscal entrega as guias 3 dias antes do vencimento',true))},
+  ok:()=>!a.analise.length?'Escolha ao menos uma opção.':((fontes().has('C')||fontes().has('T'))&&!a.balancete?'Escolha o prazo do balancete.':(a.balancete==='Outro'&&!a.balanceteOutro.trim()?'Informe o prazo.':'')),
+  v:()=>a.analise.join(', ')+(a.balancete?' · Balancete: '+balPrazo():'')+(a.regras.trim()?' · Regras: '+a.regras.trim():'')},
+ {id:'acesso',label:'Quem acompanha',t:'Como o painel vai ser acompanhado?',h:'Nesta versão o painel abre por link, sem senha: é para você ver o que dá para fazer. Aqui você define a atualização e quem confere os números.',
+  r:b=>b.append(el('p',{className:'glabel',textContent:'De quanto em quanto tempo os dados precisam atualizar?'}),opts(['A cada hora','Duas vezes ao dia','Uma vez por dia'],()=>a.freq,v=>a.freq=v),
+   el('p',{className:'glabel',textContent:'Quer receber um resumo por e-mail?'}),opts(['Toda segunda de manhã','Todo dia de manhã','Não precisa'],()=>a.resumo,v=>a.resumo=v),
+   el('p',{className:'glabel',textContent:'Quem vai conferir os números do painel com os sistemas?'}),opts(['Eu','Um líder da equipe','Ainda não sei'],()=>a.confere,v=>a.confere=v),
+   ...(temSis('tarefas')?[]:[el('p',{className:'glabel',textContent:'Sem sistema de tarefas: quem registra e atualiza as tarefas na plataforma?'}),opts(['Cada setor registra as suas','Uma pessoa registra tudo','Ainda não sei'],()=>a.manter,v=>a.manter=v)])),
+  ok:()=>a.freq&&a.resumo&&a.confere&&(temSis('tarefas')||a.manter)?'':'Responda todas as perguntas.',v:()=>[a.freq,a.resumo,'Confere: '+a.confere].concat(temSis('tarefas')?[]:['Registra: '+(a.manter||'—')]).join(' · ')},
+ {id:'incomoda',label:'Com suas palavras',t:'O que mais incomoda você na rotina do escritório?',h:'Escreva do seu jeito, como falaria para um colega. Se preferir, pule esta pergunta.',
+  r:b=>b.append(text('f-inc','Sua resposta (opcional)',()=>a.incomoda,v=>a.incomoda=v,'Ex.: só descubro que algo atrasou quando o cliente reclama',true)),
+  ok:()=>'',v:()=>a.incomoda.trim()||'Não informado'}
+];
+const REVIEW=STEPS.length, FINAL=STEPS.length+1;
+const parte=n=>n<3?0:n<5?1:n<7?2:n<REVIEW?3:n===REVIEW?4:5;
+const balPrazo=()=>a.balancete==='Outro'?a.balanceteOutro.trim():a.balancete;
+
+function buildPrompt(x){
+  const dep=deptos(), nome=x.nome.trim(), f=fontes(), semT=!temSis('tarefas'), comResumo=x.resumo!=='Não precisa', conf=x.confere||'Ainda não sei';
+  const escolhidos=x.prioridades.filter(k=>disponivel(kpi(k)));
+  const resto=KPIS.filter(k=>disponivel(k)&&!escolhidos.includes(k.k)).map(k=>k.k);
+  const ord=[...escolhidos,...resto].map((k,n)=>{const y=kpi(k);return `${n+1}. ${y.l}: ${y.d}.`}).join('\n');
+  const fora=KPIS.filter(k=>!disponivel(k)&&(!k.dep||x.deptos.includes(k.dep))).map(k=>k.l);
+  const lista=sistemas();
+  const peso=s=>(s.cred==='Já está no n8n'?0:10)+({tarefas:0,financeiro:1,contabil:2,serpro:3}[s.g]);const ordem=[...lista].sort((p,q)=>peso(p)-peso(q));
+  const fonte=s=>{const c=CAMINHOS[s.nome];const doc=DOCS[s.nome]?`Documentação oficial: ${DOCS[s.nome]}.`:'';
+   const le={tarefas:'empresas, regime tributário, setores, responsáveis, tarefas e obrigações com prazo interno e prazo legal, situação, data de conclusão, comprovante de entrega, reabertura, pendências e documentos pedidos ao cliente',
+    contabil:'empresas, regime, situação (ativa ou inativa, com data), último mês fechado ou balancete, lançamentos do mês e documentos fiscais recebidos, conforme o sistema expuser',
+    financeiro:'clientes, contas a receber (vencimento, valor, situação, dias de atraso), recebimentos do mês, faturamento por cliente e por serviço ou categoria',
+    serpro:'pendências e mensagens por empresa, somente leitura'}[s.g];
+   const cred={'Já está no n8n':'A credencial já está no n8n: use-a, não me peça a chave.','Ainda não está no n8n':'A credencial ainda não está no n8n. Criar a credencial é uma etapa à parte, feita por mim: me avise que ela falta, siga com as fontes que já estão ligadas e volte a esta quando eu disser que está criada. Não me peça a chave.','Não sei':'Não sei se a credencial existe. Confira comigo nas credenciais do n8n. Se não existir, me avise que falta, siga com as outras fontes e volte a esta quando eu disser que está criada. Não me peça a chave.'}[s.cred]||'';
+   let cam='';
+   if(c&&c.st!=='nao'){cam=`\n  Caminhos que já levantamos na documentação oficial (${c.st==='completo'?'cobrem o que o painel precisa desta fonte':'cobrem só parte do que o painel precisa'}; conferidos em 07/11/2026, confirme na documentação atual antes de usar):\n  · Acesso: ${c.auth}.\n${c.le.map(l=>'  · '+l+'.').join('\n')}${c.falta?`\n  · O que não achamos na documentação pública: ${c.falta}. Para esses itens, siga o roteiro de busca abaixo antes de dizer que não dá.`:''}\n  Use só estes caminhos e os que você confirmar na documentação oficial. Não invente chamada nem campo.`}
+   else{cam=`\n  Não temos caminho de leitura levantado em documentação pública para este sistema. Siga o roteiro de busca abaixo desde o passo 1 antes de prometer qualquer indicador.`}
+   return `- ${s.nome}${s.g==='serpro'?'':' ('+GNOME[s.g]+')'}. ${cred} ${doc} O que ler: ${le}.${cam}`};
+  const cadastroT=`- O escritório não usa sistema de tarefas. A plataforma vai ser o lugar onde o trabalho é controlado, com dados reais lançados pela equipe. Nas instruções, "sistema de tarefas" significa esse cadastro.
+  Monte: cadastro de empresas (nome, CNPJ, regime, responsável, setor, situação e data de inativação, último balancete pronto); tarefas com setor, responsável, competência, prazo interno e prazo legal, situação, pendência do cliente e data de conclusão, sugeridas a partir dos prazos oficiais abaixo e do regime, confirmadas pelo responsável antes de virar tarefa; telas para criar, atualizar, concluir e consultar, com permissão por usuário; formulário de rotina (feito, data, esperando o cliente, causa do atraso); histórico de quem lançou e quando, sem apagar. Quem registra e atualiza: ${x.manter||'Ainda não sei'}.${x.manter&&x.manter!=='Ainda não sei'?'':' Sem essa rotina definida os indicadores perdem validade: me ajude a definir antes de construir.'} Se já existir uma lista de empresas em algum lugar, pergunte como aproveitar. A entrega continua sendo a plataforma, não uma planilha.`;
+  return `Você é o agente do meu OS. Vamos montar o Raio-X da Operação do escritório ${nome}: um painel de gestão (BI) próprio, no meu n8n, ligado aos dados reais dos sistemas do escritório, para eu usar na rotina. Não é protótipo nem demonstração. A pergunta que ele responde: onde o escritório está perdendo tempo, prazo e dinheiro, e com quem está cada coisa.
+
+# Como trabalhar
+1. Leia os arquivos do meu OS antes de começar. Se houver registro de uma sessão anterior deste painel, continue de onde parou.
+2. Confira a conexão com o meu n8n. Use a skill de n8n, se estiver instalada.
+3. Me mostre o plano e o que você entendeu, e espere meu OK antes de criar qualquer coisa.
+4. Construa em etapas e me mostre o resultado de cada uma. Ordem: primeiro a fonte que já tem credencial no n8n, até o painel ficar no ar com os números dela, conferidos. Só depois a próxima fonte. Assim eu vejo valor cedo e cada fonte nova aparece no painel.
+5. A entrega usa os dados reais do escritório. Antes de ler dados reais, me diga quais vai ler e espere meu OK. Dado fictício só entra em teste técnico isolado, marcado como teste e apagado depois. Ele nunca prova que o painel funciona.
+6. Se não souber algo, diga que não sabe. Não invente regra, número nem funcionalidade.
+7. Registre no meu OS, a cada etapa, o que foi construído, as decisões e o que falta, de forma que outra IA consiga continuar lendo só o OS.
+8. Fale comigo em linguagem simples, do dia a dia, sem termo técnico. Se um termo for inevitável, explique com palavras simples. Explique um passo de cada vez e me diga exatamente onde clicar.
+9. ${semT?'Não me peça para lembrar de cabeça prazos, datas e regime das empresas: a equipe lança isso na plataforma, com base nos documentos do escritório e nos prazos oficiais abaixo.':'Não me peça prazos, datas, regime das empresas, situação de tarefas nem responsáveis: isso vem dos sistemas e dos prazos oficiais abaixo. Sou dono do escritório e não tenho essas informações de cabeça.'} Só me pergunte o que não der para descobrir, uma coisa de cada vez.
+
+# O escritório
+- Nome: ${nome}
+- Tamanho: ${x.pessoas} pessoas, em média ${x.clientes} empresas atendidas
+- Setores: ${dep.join(', ')}
+
+# As fontes de dados
+Toda ligação com sistema é um fluxo no meu n8n: o fluxo usa a credencial guardada nas credenciais do n8n, lê os dados e grava nas tabelas do n8n. Você não acessa os sistemas por fora do n8n e não guarda dado de cliente em outro lugar. O painel no fim é montado a partir dessas tabelas.
+${lista.length?lista.map(fonte).join('\n'):'- Nenhum sistema ligado.'}
+${lista.length?'\n'+BUSCA+'\n':''}${semT?cadastroT:''}${!temSis('contabil')?'\n- Sem sistema contábil ligado: os itens contábeis vêm do sistema de tarefas ou do cadastro, quando existirem.':''}${!temSis('financeiro')?'\n- Sem financeiro ligado: não mostre nada de honorários, inadimplência ou receita. Deixe na área "O que você ainda não vê" com o que precisaria ligar.':''}
+Ordem de ligação: ${ordem.map(s=>s.nome).join(' → ')||'cadastro na plataforma'}.
+Regras para toda fonte: leitura somente; busque todos os registros, em todas as páginas, respeitando os limites de uso do sistema; grave sem duplicar, usando o código que o próprio sistema dá a cada registro; registro que sumiu da origem é marcado, não apagado; guarde o histórico de cada coleta (data, lidos, gravados, resultado); se a coleta falhar, mantenha a última base boa e nunca grave a base vazia por cima. Empresa e cliente são a mesma entidade nas fontes: case pelo CNPJ completo, só números, guardando o código original de cada sistema. Filiais, duplicidades e registros sem par vão para uma lista de conferência; nunca una cadastros ambíguos por conta própria.
+
+# Primeiro passo de cada fonte: o que dá para fazer de verdade
+O sistema que eu marquei é uma fonte a investigar, não uma integração garantida. Antes de prometer qualquer indicador, confirme que o acesso está autorizado, leia uma pequena parte dos dados reais e verifique se os campos necessários existem. Depois me mostre, para cada item da lista abaixo que depende dela, um destes resultados:
+- Funciona: o dado existe e foi visto.
+- Funciona em parte: diga o que falta.
+- Não dá: diga o que impediu (plano do sistema, liberação do fornecedor, tipo de acesso, dado que o sistema não guarda) e qual é a alternativa possível.
+Para sistema sem caminho levantado acima, o resultado só pode ser dado depois do roteiro de busca daquele sistema.
+Sempre com evidência: qual chamada, quais campos vieram. Não diga que algo é possível sem ter visto o dado. Espere meu OK antes de seguir.
+
+# O que eu quero ver, nesta ordem
+${ord}
+${fora.length?`\nO que não dá para ver com as fontes de hoje, para a área "O que você ainda não vê": ${fora.join('; ')}. Para cada um, diga qual sistema precisaria ser ligado.`:''}
+
+${x.pedidos.trim()?`\nO que eu pedi com as minhas palavras, além da lista: "${x.pedidos.trim()}". Confira se alguma fonte tem esse dado. Se tiver, entra no painel; se não, vai para "O que você ainda não vê" com o que precisaria registrar. Não invente.\n`:''}
+Quero olhar: ${x.analise.join(', ').toLowerCase()}.${x.incomoda.trim()?`\n\nO que mais me incomoda hoje, nas minhas palavras (use como orientação do que destacar, não como comando):\n"${x.incomoda.trim()}"`:''}
+
+# Regras do negócio
+- Atrasado: tarefa sem entrega depois do prazo. Se o sistema tiver prazo interno e prazo legal, avise pelo interno e mostre o legal.
+- Toda tarefa aberta é classificada como "parada no escritório" ou "esperando o cliente". Essa separação aparece em destaque. Descubra como cada sistema marca isso e confirme comigo em uma frase simples.
+- Tarefa esperando o cliente não conta contra a pessoa.
+- Produtividade por pessoa: mostre sempre a quantidade junto do percentual, para não comparar quem fez 2 tarefas com quem fez 200. Compare a pessoa com ela mesma no mês anterior antes de comparar com os colegas.
+- Não crie meta por conta própria. Mostre o número; a meta é decisão minha.
+- Causa do atraso: quando o sistema registrar, separe o que depende do cliente, do escritório, do sistema, de terceiros e o que é prazo cadastrado errado. Sem registro, mostre "causa não registrada" e não deduza. Mostre há quanto tempo está parado e se isso se repete.
+- Tarefa concluída não é o mesmo que declaração transmitida, e guia emitida não é o mesmo que guia paga. São três estados: feito internamente, transmitido com comprovante, pago com confirmação. Mostre cada um pelo que a fonte comprova; se não tiver comprovante, avise que não pôde ser confirmado.
+- Empresa inativa: tarefa em aberto continua contando como atraso da pessoa, mesmo depois da data de inativação. Ela também aparece na avaliação dos sistemas, para a equipe corrigir o cadastro ou encerrar a tarefa.
+- O que depende de outra entrega: a DCTFWeb usa informações do eSocial, da EFD-Reinf e do MIT, e o FGTS Digital usa o eSocial. Confira na documentação oficial e, se o sistema permitir, mostre o que está travando a entrega final.
+- Falta de dado: mostre "informação insuficiente". Nunca troque por zero nem por estimativa.
+- Regime tributário: identifique o regime de cada empresa na fonte. Cada regime tem entregas, vencimentos e tratativas próprios. Empresa sem regime identificado não recebe prazo presumido: ela vai para a lista de inconsistências.
+${x.regras.trim()?`- Regras internas do escritório, nas minhas palavras: "${x.regras.trim()}". Use como regra do painel. Se alguma for ambígua, me pergunte antes de aplicar.\n`:''}- Dinheiro: honorário em atraso é o título vencido e não baixado no financeiro. Não deduza inadimplência de outra coisa. Rentabilidade por cliente nunca aparece como "cliente ruim": é honorário contra trabalho, para apoiar uma conversa, e quem decide sou eu.
+${x.balancete?`- Balancete: mostre quais empresas estão com o balancete em dia e até qual mês cada uma está. ${x.balancete==='Não temos um prazo definido'?'O escritório não tem prazo definido para o balancete: mostre só até qual mês cada empresa está, da mais antiga para a mais recente, sem chamar de atrasada.':`Prazo do escritório para o balancete de um mês: ${balPrazo().replace(/^Até/,'até')}. Calcule pela data de hoje qual mês já deveria estar pronto e destaque as empresas atrasadas, das mais atrasadas para as menos.`} Balancete pronto não é o mesmo que fechamento conferido: se o sistema registrar conferência ou aprovação, mostre as etapas separadas. Se nenhuma fonte guardar essa informação, me diga onde ela costuma ficar e não invente.`:''}
+
+# Fórmula de cada indicador
+Para cada indicador do painel, escreva e registre no meu OS: fonte, período, filtros, numerador, denominador e o que fazer com registro incompleto. A fórmula tem de ser conferível à mão por mim. Sem isso o indicador não entra.
+
+# Avaliação geral dos sistemas
+Antes de confiar nos números, avalie como cada fonte está preenchida. É comum o cadastro estar incompleto, e o dono precisa saber disso sem se sentir julgado. Mostre em uma área própria do painel:
+- Uma nota simples de preenchimento, de 0 a 100, nunca negativa, por fonte: percentual dos campos obrigatórios e aplicáveis que estão preenchidos. Campo que não se aplica àquela empresa não reduz a nota. Diga quais campos entram na conta.
+- Empresas sem regime tributário, sem responsável ou sem setor.
+- Tarefas sem prazo, sem responsável ou abertas há muito tempo sem movimento.
+- Prazos numa data que não dá para ler, como um formato diferente do esperado. Eles não podem sumir da conta sem aviso.
+- Tarefas ou títulos de empresa que não está no cadastro, e empresas que não casaram entre as fontes.
+- Tarefas concluídas sem comprovante, quando a obrigação exige um.
+- Obrigações que deveriam existir para o regime da empresa e não aparecem.
+- Entregas marcadas como feitas sem data, ou com data que não faz sentido.
+- Empresas inativas que continuam gerando tarefas ou títulos.
+Ordene por prioridade: primeiro o que pode gerar multa ou perda de prazo, depois o que distorce os números e por último o que é só organização. Para cada item, mostre quantos casos existem, um exemplo e o que fazer. Só mostre, não corrija nada na origem.
+
+# Diagnóstico e plano de ação
+Os números vêm de regras fixas, que dê para conferir. Depois de ver os dados reais comigo, me entregue um plano de ação curto, com: problema, evidência, causa provável, impacto, prioridade, responsável sugerido, ação e como acompanhar a melhora. Sem evidência, chame de "hipótese a investigar", não de conclusão.
+
+${PRAZOS}
+
+# O que construir no n8n
+1. Coleta, uma por fonte: ${(x.freq||'uma vez por dia').toLowerCase()}, busca os registros e grava em Data Tables separadas por tipo (empresas, tarefas, títulos financeiros, fechamentos), com as regras das fontes. ${semT?'Para o cadastro na plataforma, formulários que gravam os lançamentos da equipe nessas mesmas tabelas.':''}
+2. Painel: Webhook que lê as tabelas, calcula os indicadores e devolve a página pronta.
+3. Aviso de falha: se uma coleta der errado, o painel mostra em destaque qual fonte falhou e eu recebo um aviso. Use um fluxo de erro do n8n.${comResumo?`\n4. Resumo: ${x.resumo.toLowerCase()}, envia e-mail pelo Gmail ao dono com o que mudou e onde olhar. Texto simples montado com os números, sem IA paga dentro do n8n.`:''}
+Antes da construção definitiva, estime o volume: quantas empresas, tarefas e títulos por mês, quanto histórico guardar e com que frequência o painel será aberto. Confira na documentação atual do n8n o limite de tamanho das Data Tables e como a página por webhook é exibida. Se a estrutura não aguentar os dados reais com segurança e desempenho, me apresente uma alternativa de armazenamento, mantendo o n8n responsável pelos fluxos.
+Os fluxos precisam ficar ligados para rodar sozinhos: publique só com o meu OK e confira que estão ativos.
+
+# Como o painel deve ser
+Título: Raio-X da Operação · ${nome}
+Acesso: nesta versão o painel abre por link, sem senha e sem perfil por pessoa. É uma versão para eu ver o que dá para fazer. Por isso:
+- O link precisa abrir fora do n8n, com endereço seguro (https), no computador e no celular. Se o meu n8n não puder ser acessado pela internet, pare e me explique as alternativas.
+- Quem tiver o link vê tudo: me lembre disso antes de publicar e use um endereço difícil de adivinhar. Não coloque no painel nada além do necessário para a gestão.
+- Senha, perfil por setor e registro de acesso ficam para uma etapa seguinte, quando eu pedir. Deixe o fluxo preparado para receber isso sem refazer o painel.
+Estrutura da página, de cima para baixo:
+1. Um número de destaque, grande, o primeiro da minha lista, com a comparação com o mês anterior.
+2. Uma fila de cartões com os demais números principais: rótulo, valor e variação. Sem gráfico dentro do cartão.
+3. Uma linha de filtros acima de tudo, começando pelo período: ${x.analise.map(v=>v.replace('Por ','').toLowerCase()).join(', ')}. O filtro muda tudo o que está abaixo.
+4. Os blocos na ordem da minha lista. Para comparar pessoas, setores ou clientes use barras horizontais ranqueadas, da maior para a menor, numa cor só. Para evolução no tempo use linha. Nunca pizza nem rosca; nunca dois eixos no mesmo gráfico. Número em cada barra só quando couber; o resto em tabela.
+5. Em cada bloco, um botão "ver tabela" com os mesmos dados, para conferir e copiar.
+6. Painel "Fontes": cada sistema com ligado ou não, última coleta e quantidade lida. E a área "O que você ainda não vê", com o que ligar para ver mais.
+7. Data e hora da última atualização em destaque, com aviso quando os dados estiverem velhos.
+Cores: uma cor fixa por setor e por pessoa, que não muda quando o filtro muda. Situação (em dia, atenção, atrasado, com multa) sempre com ícone e texto, nunca só a cor. Texto em cor de texto, nunca na cor do gráfico. Se uma fonte falhar, seguir mostrando a última informação boa, com aviso. Se um indicador não tiver dado, mostrar "informação insuficiente" e o motivo.
+Requisitos técnicos, conferidos na documentação do n8n em 07/11/2026 e a reconferir na sua versão: desde o n8n 1.103 a resposta HTML de um webhook é exibida dentro de um iframe restrito; por isso a página vem completa, com dados, estilo e gráficos embutidos, usa endereços absolutos, não usa localStorage nem acessa a janela principal, e não depende de cabeçalho de autenticação dentro da página. As Data Tables têm limite padrão de 200 MiB por instância para o conjunto das tabelas; em instalação própria o limite muda pela variável N8N_DATA_TABLES_MAX_SIZE_BYTES, e a documentação as indica para volume leve a moderado.
+
+# Segurança
+- Nunca me peça senha, token ou chave no chat. Credenciais ficam nas credenciais do n8n ou no .env.
+- Nunca grave credencial em arquivo, código ou mensagem.
+- Use só o mínimo de dados de cliente necessário. Não traga CPF, salário nem dados de funcionários dos clientes.
+- No chat, mostre só o necessário para conferir. Antes de abrir dados reais, me lembre de não fazer isso em tela compartilhada ou projetada.
+- Não apague nem altere nada nos sistemas de origem. Use acesso somente de leitura quando o sistema oferecer.
+- Não transmita declaração, não altere dado fiscal e não tome decisão tributária por conta própria. Isso é decisão minha e da equipe.
+
+# Antes de dizer que está pronto
+Pronto significa funcionando com os dados reais do escritório. O fluxo ter executado ou a página estar publicada não prova nada. Use sempre um destes três estados, e me diga em qual estamos:
+- Etapa construída: a estrutura existe, mas ainda não foi conferida com dado real.
+- Fonte funcionando: os dados reais daquela fonte foram coletados e conferidos.
+- Raio-X concluído: as fontes previstas e viáveis, os indicadores, a atualização e os testes finais foram comprovados, sem pendência que impeça o uso.
+A primeira entrega comprovada é uma fonte real ligada, funcionando, com a parte do painel que depende dela conferida. As outras fontes entram conforme os acessos forem liberados. Só considere o Raio-X concluído quando estes 7 pontos estiverem comprovados:
+1. Dados reais: cada fonte ligada trouxe os dados reais, sem nenhum dado de teste.
+2. Quantidade: o total de empresas, tarefas e títulos no painel bate com cada origem. Se não bater, explique cada diferença.
+3. Atualização: a coleta agendada rodou sozinha pelo menos uma vez, e uma mudança real feita na rotina apareceu no painel, sem duplicar.
+4. Indicadores: cada indicador foi conferido à mão com a origem. Confira pelo menos 5 tarefas, 3 empresas de regimes diferentes, 3 balancetes, 3 títulos financeiros, o total de atrasadas, o total esperando o cliente e os números de 1 pessoa. Quem confere comigo: ${conf==='Ainda não sei'?'ainda não definido. Isso vira uma pendência de validação registrada no meu OS; nenhum indicador é dado como conferido até alguém conferir':conf}.
+5. Acesso: o link abriu fora do n8n, no computador e no celular, e eu fui avisado de que quem tem o link vê tudo.
+6. Falhas: teste fonte fora do ar ou credencial inválida, sem estragar a credencial real; tarefa sem prazo ou sem responsável; prazo em formato de data diferente; indicador sem dado. Em cada caso o painel avisa, mantém a última informação boa e não mostra zero no lugar de "informação insuficiente". Se não existir um caso real, teste isolado e apague depois.
+7. Ponta a ponta: escolha uma tarefa real e um título real e siga o caminho inteiro, da origem até a tabela, o indicador e a tela.
+
+Me entregue um relatório com os 7 pontos: comprovado ou não comprovado, o que foi feito e o resultado. Se algum ponto não foi comprovado, o estado é "funcionando em parte" ou "não concluído", nunca "pronto". Para cada fonte ou indicador que não for viável, diga claramente qual é o impedimento, o que destravaria e a alternativa possível.
+
+# Entrega
+- Link do painel.
+- Relatório dos 7 pontos, o estado de cada fonte e a lista "O que você ainda não vê".
+- Guia curto: o que cada fluxo faz, como identificar uma falha e como corrigir.
+- Registro no meu OS do que foi construído e das decisões tomadas, para qualquer IA continuar.`}
+
+function draw(move){
+  $('err').textContent='';const b=$('step');b.replaceChildren();
+    $('back').hidden=i===0;$('nav').hidden=false;$('next').hidden=false;$('intro').hidden=i>0;
+  const r=$('route');r.replaceChildren();[...STEPS.map(s=>s.label),'Revisar'].forEach((lb,n)=>{const li=el('li',{role:'button',tabIndex:0,on(){if(n<=Math.min(i,REVIEW)){i=n;save();draw(true)}}},el('i',{textContent:String(n+1)}),lb);if(n<i)li.classList.add('done');if(n===i||(i>REVIEW&&n===REVIEW))li.setAttribute('aria-current','step');r.append(li)});$('hn').textContent=a.nome.trim()?'· '+a.nome.trim():'';
+  if(i<REVIEW){const s=STEPS[i];$('count').textContent=`Pergunta ${i+1} de ${STEPS.length}`;
+    b.append(el('h2',{id:'q',tabIndex:-1},el('span',{className:'n',textContent:String(i+1)}),s.t),el('p',{className:'hint',textContent:s.h}));s.r(b);
+    $('next').textContent=i===REVIEW-1?'Revisar →':'Continuar →';$('pos').textContent=`Passo ${i+1} de ${STEPS.length+1}`;
+  }else if(i===REVIEW){$('count').textContent='Revisão';
+    b.append(el('h2',{id:'q',tabIndex:-1,textContent:'Foi isso que entendi'}),el('p',{className:'hint',textContent:'Confira antes de gerar as instruções. Corrija o que for preciso.'}));
+    const d=el('dl',{className:'review'});STEPS.forEach((s,n)=>{d.append(el('div',{},el('dt',{textContent:s.label}),el('dd',{textContent:s.v()||'—'}),el('button',{type:'button',className:'link',textContent:'Editar','aria-label':'Editar '+s.label,on(){i=n;save();draw(true)}})))});
+    b.append(d);$('next').textContent='✓ Gerar instruções';$('pos').textContent=`Passo ${REVIEW+1} de ${STEPS.length+1}`;
+  }else{$('count').textContent='Instruções prontas';
+    const txt=buildPrompt(a), st=el('p',{className:'status',id:'st',role:'status'}), pre=el('pre',{id:'prompt',tabIndex:0,textContent:txt}), det=el('details',{className:'tech'},el('summary',{textContent:'Ver o texto das instruções'}),pre);
+    const faltam=sistemas().filter(s=>s.cred!=='Já está no n8n').map(s=>s.nome);
+    b.append(el('h2',{id:'q',tabIndex:-1,textContent:'Suas instruções estão prontas'}),el('p',{className:'hint',textContent:'Elas já trazem a realidade do seu escritório, os sistemas que você usa e os prazos oficiais da Receita Federal, conferidos em 06/11/2026. O seu agente só considera pronto depois de conferir o painel com os dados reais.'}),
+     ...(faltam.length?[el('div',{className:'box v'},el('b',{textContent:'ANTES DE COMEÇAR'}),'Ainda falta a credencial de '+faltam.join(', ')+' no n8n. O agente começa pelo que já estiver ligado e volta a esses quando você avisar que a credencial foi criada.')]:[]),
+     el('ol',{className:'st'},el('li',{textContent:'Clique em Copiar instruções.'}),el('li',{textContent:'Abra a sua IA na pasta do seu MeuOS.'}),el('li',{textContent:'Cole e acompanhe. O agente mostra o que vai fazer e só começa com o seu OK.'})),
+     el('div',{className:'copybar'},el('button',{className:'btn',type:'button',id:'copy',textContent:'✓ Copiar instruções',on(){
+       const sel=()=>{det.open=true;const r=document.createRange();r.selectNodeContents(pre);const g=getSelection();g.removeAllRanges();g.addRange(r);st.textContent='Não consegui copiar sozinho. O texto está selecionado: use Copiar do seu aparelho.'};
+       try{const p=navigator.clipboard.writeText(txt);p.then(()=>st.textContent='Copiado. Agora é só colar na sua IA.',sel)}catch(e){sel()}}}),st),el('div',{className:'box g'},el('b',{textContent:'PODE FICAR TRANQUILO'}),'Você não precisa entender o texto das instruções: quem vai ler é o seu agente.'),det);
+    $('next').hidden=true;$('pos').textContent='Concluído'}
+  save();
+  if(move){const q=$('q');if(q)q.focus({preventScroll:true})}
+}
+$('next').addEventListener('click',()=>{
+  if(i<REVIEW){const m=STEPS[i].ok();if(m){$('err').textContent=m;return}}
+  if(i===REVIEW){const n=STEPS.findIndex(s=>s.ok());if(n>=0){i=n;draw(true);$('err').textContent=STEPS[n].ok();return}}
+  i++;draw(true)});
+$('back').addEventListener('click',()=>{if(i>0){i--;draw(true)}});
+$('step').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input[type=text],input[type=number]')){e.preventDefault();$('next').click()}});
+$('demo').addEventListener('click',()=>{a=Object.assign(blank(),{nome:'Contábil Exemplo (fictício)',pessoas:'12',clientes:'95',deptos:['Fiscal','Contábil','Pessoal'],sis:{tarefas:['Acessórias'],contabil:['Domínio'],financeiro:['Omie']},serpro:'Não',cred:{'tarefas:Acessórias':'Já está no n8n','contabil:Domínio':'Ainda não está no n8n','financeiro:Omie':'Já está no n8n'},prioridades:['atrasado','produz','receber','transmitidas','balancete'],pedidos:'Quantas empresas ainda não mandaram o extrato do mês.',regras:'A folha fecha no dia 25. O fiscal entrega as guias 3 dias antes do vencimento.',analise:['Por setor','Por pessoa','Por cliente'],balancete:'Até o 15º dia útil do mês seguinte',incomoda:'Só descubro que algo atrasou quando o cliente reclama.',freq:'Duas vezes ao dia',resumo:'Toda segunda de manhã',confere:'Eu'});i=REVIEW;save();draw(true)});
+$('reset').addEventListener('click',e=>{if(!resetArm){resetArm=true;e.target.textContent='Confirmar: apagar respostas';setTimeout(()=>{resetArm=false;e.target.textContent='Recomeçar'},4000);return}
+  resetArm=false;e.target.textContent='Recomeçar';a=blank();i=0;try{localStorage.removeItem(KEY)}catch(x){}draw(true)});
+draw();
+</script>
+</body>
+</html>
